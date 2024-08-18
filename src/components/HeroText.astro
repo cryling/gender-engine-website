@@ -1,0 +1,43 @@
+---
+import { Image } from "astro:assets";
+import cyanBlur from "../assets/blur-cyan.png";
+
+interface Props {
+  repoHref: string;
+}
+
+const { repoHref } = Astro.props;
+
+const heroText = "A simple, no-fuss, free API to determine the gender of any name. Self-hosted and open-source."
+---
+
+<div class="relative z-10 md:text-center lg:text-left">
+  <Image
+    src={cyanBlur}
+    alt="Cyan blur"
+    height={530}
+    width={530}
+    style="color:transparent"
+    class="absolute bottom-full right-full -mb-56 -mr-72 opacity-50"
+  />
+
+  <div class="relative">
+    <p
+      class="inline bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display text-5xl tracking-tight text-transparent"
+    >
+      Find the Gender of any Name
+    </p>
+    <p class="mt-3 text-2xl tracking-tight text-slate-400">
+      { heroText }
+    </p>
+    <div class="mt-8 flex gap-4 md:justify-center lg:justify-start">
+      <a
+        class="rounded-full bg-sky-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500"
+        href="/">Get started</a
+      ><a
+        class="rounded-full bg-slate-800 py-2 px-4 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400"
+        href={repoHref}>View on GitHub</a
+      >
+    </div>
+  </div>
+</div>
