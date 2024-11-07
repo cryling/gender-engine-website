@@ -8,6 +8,7 @@ import indigoBlur from "../assets/blur-indigo.png";
 import { Code } from "astro:components";
 
 import Window from "../components/AppWindow.astro";
+import GenderFinder from "../components/GenderFinder";
 
 import draculaTransparentTheme from "../../shiki/themes/dracula-transparent.json";
 
@@ -102,6 +103,8 @@ const draculaTheme = JSON.parse(JSON.stringify(draculaTransparentTheme));
           </div>
         </div>
       </div>
+
+      <GenderFinder />
     </div>
   </div>
 </Layout>
