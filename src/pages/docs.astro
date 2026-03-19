@@ -1,0 +1,237 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import { GITHUB_REPO } from "../constants.ts";
+---
+
+<Layout title="API Documentation - Gender Engine">
+  <div class="flex w-full flex-col min-h-screen">
+    <Header repoHref={GITHUB_REPO} client:load />
+
+    <div class="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-12 py-12">
+
+        <!-- Sidebar -->
+        <aside class="hidden lg:block">
+          <nav class="sticky top-24 space-y-1">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
+              On this page
+            </p>
+            <a href="#quick-start" class="block py-1.5 text-sm text-slate-700 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-400 transition-colors">
+              Quick Start
+            </a>
+            <a href="#endpoint" class="block py-1.5 text-sm text-slate-700 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-400 transition-colors">
+              Endpoint
+            </a>
+            <a href="#parameters" class="block py-1.5 text-sm text-slate-700 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-400 transition-colors pl-4">
+              Parameters
+            </a>
+            <a href="#example" class="block py-1.5 text-sm text-slate-700 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-400 transition-colors pl-4">
+              Example
+            </a>
+            <a href="#response" class="block py-1.5 text-sm text-slate-700 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-400 transition-colors pl-4">
+              Response
+            </a>
+            <a href="#notes" class="block py-1.5 text-sm text-slate-700 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-400 transition-colors">
+              Notes
+            </a>
+          </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="min-w-0">
+          <div class="mb-10">
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+              API Documentation
+            </h1>
+            <p class="mt-2 text-base text-slate-700 dark:text-slate-300">
+              Gender Engine exposes a single REST endpoint for determining the gender of a given name.
+            </p>
+          </div>
+
+          <!-- Quick Start -->
+          <section id="quick-start" class="mb-14 scroll-mt-24">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-4 pb-2 border-b border-slate-200 dark:border-slate-700/50">
+              Quick Start
+            </h2>
+            <p class="text-sm text-slate-700 dark:text-slate-300 mb-4">Pull and run the Docker image to get started in seconds:</p>
+            <div class="rounded-lg overflow-hidden ring-1 ring-slate-300 dark:ring-slate-700">
+              <div class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700">
+                <span class="text-xs font-mono font-medium text-slate-600 dark:text-slate-400">Terminal</span>
+              </div>
+              <div class="bg-slate-950 p-4 overflow-x-auto">
+                <pre class="text-sm font-mono leading-relaxed"><code><span class="text-slate-500"># Pull the latest image</span>
+<span class="text-sky-400">$</span> <span class="text-slate-200">docker pull ghcr.io/cryling/gender-engine:latest</span>
+
+<span class="text-slate-500"># Start the server on port 8080</span>
+<span class="text-sky-400">$</span> <span class="text-slate-200">docker run -p 8080:8080 ghcr.io/cryling/gender-engine</span></code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- Endpoint -->
+          <section id="endpoint" class="mb-14 scroll-mt-24">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-4 pb-2 border-b border-slate-200 dark:border-slate-700/50">
+              Endpoint
+            </h2>
+
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center rounded-md bg-emerald-100 dark:bg-emerald-500/15 px-2.5 py-1 text-xs font-bold font-mono text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-300 dark:ring-emerald-500/25">
+                GET
+              </span>
+              <code class="text-base font-mono font-medium text-slate-900 dark:text-slate-100">/api/v1/gender</code>
+            </div>
+            <p class="text-sm text-slate-700 dark:text-slate-300 mb-8">
+              Returns the predicted gender for a given name, optionally scoped to a specific country.
+            </p>
+
+            <!-- Parameters -->
+            <div id="parameters" class="mb-8 scroll-mt-24">
+              <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-4">Query Parameters</h3>
+              <div class="overflow-x-auto rounded-lg ring-1 ring-slate-300 dark:ring-slate-700">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-800/80">
+                      <th class="py-3 px-4 text-left font-semibold text-slate-900 dark:text-slate-200">Parameter</th>
+                      <th class="py-3 px-4 text-left font-semibold text-slate-900 dark:text-slate-200">Type</th>
+                      <th class="py-3 px-4 text-left font-semibold text-slate-900 dark:text-slate-200">Required</th>
+                      <th class="py-3 px-4 text-left font-semibold text-slate-900 dark:text-slate-200">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-t border-slate-200 dark:border-slate-700/50">
+                      <td class="py-3 px-4">
+                        <code class="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono font-medium text-sky-700 dark:text-sky-400">name</code>
+                      </td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">string</td>
+                      <td class="py-3 px-4">
+                        <span class="inline-flex items-center rounded-md bg-amber-100 dark:bg-amber-500/15 px-1.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-400 ring-1 ring-inset ring-amber-300 dark:ring-amber-500/25">required</span>
+                      </td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">The first name (or full name) to look up.</td>
+                    </tr>
+                    <tr class="border-t border-slate-200 dark:border-slate-700/50">
+                      <td class="py-3 px-4">
+                        <code class="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono font-medium text-sky-700 dark:text-sky-400">country</code>
+                      </td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">string</td>
+                      <td class="py-3 px-4">
+                        <span class="inline-flex items-center rounded-md bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 text-xs font-medium text-slate-700 dark:text-slate-300">optional</span>
+                      </td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">
+                        ISO 3166-1 alpha-2 country code (e.g. <code class="text-xs font-mono font-medium text-slate-900 dark:text-slate-200">US</code>, <code class="text-xs font-mono font-medium text-slate-900 dark:text-slate-200">DE</code>). Improves accuracy for region-specific names.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Example -->
+            <div id="example" class="mb-8 scroll-mt-24">
+              <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-4">Example Request</h3>
+              <div class="rounded-lg overflow-hidden ring-1 ring-slate-300 dark:ring-slate-700">
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700">
+                  <span class="text-xs font-mono font-medium text-slate-600 dark:text-slate-400">bash</span>
+                </div>
+                <div class="bg-slate-950 p-4 overflow-x-auto">
+                  <pre class="text-sm font-mono leading-relaxed"><code><span class="text-sky-400">$</span> <span class="text-slate-200">curl -X GET</span> <span class="text-amber-300">"http://localhost:8080/api/v1/gender?name=tom&country=US"</span></code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Response -->
+            <div id="response" class="mb-8 scroll-mt-24">
+              <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-4">Example Response</h3>
+              <div class="rounded-lg overflow-hidden ring-1 ring-slate-300 dark:ring-slate-700">
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700">
+                  <span class="text-xs font-mono font-medium text-slate-600 dark:text-slate-400">json</span>
+                </div>
+                <div class="bg-slate-950 p-4 overflow-x-auto">
+                  <pre class="text-sm font-mono leading-relaxed"><code>{`{`}
+  <span class="text-sky-300">"message"</span>: <span class="text-amber-300">"tom could be found"</span>,
+  <span class="text-sky-300">"result"</span>: {`{`}
+    <span class="text-sky-300">"Name"</span>: <span class="text-amber-300">"tom"</span>,
+    <span class="text-sky-300">"Gender"</span>: <span class="text-amber-300">"M"</span>,
+    <span class="text-sky-300">"Country"</span>: <span class="text-amber-300">"US"</span>,
+    <span class="text-sky-300">"Probability"</span>: <span class="text-amber-300">"0.99560356"</span>
+  {`}`}
+{`}`}</code></pre>
+                </div>
+              </div>
+
+              <h3 class="text-base font-semibold text-slate-900 dark:text-white mt-8 mb-4">Response Fields</h3>
+              <div class="overflow-x-auto rounded-lg ring-1 ring-slate-300 dark:ring-slate-700">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-800/80">
+                      <th class="py-3 px-4 text-left font-semibold text-slate-900 dark:text-slate-200">Field</th>
+                      <th class="py-3 px-4 text-left font-semibold text-slate-900 dark:text-slate-200">Type</th>
+                      <th class="py-3 px-4 text-left font-semibold text-slate-900 dark:text-slate-200">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-t border-slate-200 dark:border-slate-700/50">
+                      <td class="py-3 px-4"><code class="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono font-medium text-slate-900 dark:text-slate-200">message</code></td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">string</td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">Human-readable status message.</td>
+                    </tr>
+                    <tr class="border-t border-slate-200 dark:border-slate-700/50">
+                      <td class="py-3 px-4"><code class="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono font-medium text-slate-900 dark:text-slate-200">result.Name</code></td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">string</td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">The name that was queried.</td>
+                    </tr>
+                    <tr class="border-t border-slate-200 dark:border-slate-700/50">
+                      <td class="py-3 px-4"><code class="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono font-medium text-slate-900 dark:text-slate-200">result.Gender</code></td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">string</td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300"><code class="text-xs font-mono font-medium text-slate-900 dark:text-slate-200">"M"</code> for male, <code class="text-xs font-mono font-medium text-slate-900 dark:text-slate-200">"F"</code> for female.</td>
+                    </tr>
+                    <tr class="border-t border-slate-200 dark:border-slate-700/50">
+                      <td class="py-3 px-4"><code class="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono font-medium text-slate-900 dark:text-slate-200">result.Country</code></td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">string</td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">The country code used for the lookup.</td>
+                    </tr>
+                    <tr class="border-t border-slate-200 dark:border-slate-700/50">
+                      <td class="py-3 px-4"><code class="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-mono font-medium text-slate-900 dark:text-slate-200">result.Probability</code></td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">string</td>
+                      <td class="py-3 px-4 text-slate-700 dark:text-slate-300">Confidence score between 0 and 1.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Notes -->
+          <section id="notes" class="mb-14 scroll-mt-24">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-4 pb-2 border-b border-slate-200 dark:border-slate-700/50">
+              Notes
+            </h2>
+            <ul class="space-y-3 text-sm text-slate-700 dark:text-slate-300">
+              <li class="flex gap-3">
+                <span class="text-sky-500 shrink-0 mt-0.5 font-bold">&bull;</span>
+                <span>The API is stateless and does not log or store any requests.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-sky-500 shrink-0 mt-0.5 font-bold">&bull;</span>
+                <span>The <code class="rounded bg-slate-100 dark:bg-slate-800 px-1 py-0.5 text-xs font-mono font-medium text-slate-900 dark:text-slate-200">country</code> parameter is optional but recommended for names common across cultures (e.g. "Andrea" is male in Italian, female in English).</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-sky-500 shrink-0 mt-0.5 font-bold">&bull;</span>
+                <span>Supported country codes follow the <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" class="font-medium text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300 underline underline-offset-2" target="_blank" rel="noopener noreferrer">ISO 3166-1 alpha-2</a> standard.</span>
+              </li>
+            </ul>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <footer class="border-t border-slate-200 dark:border-slate-700/40 mt-auto">
+      <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+          <p>This project does not collect, store, or process any personal data.</p>
+          <p class="shrink-0">No cookies. No tracking. No analytics.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+</Layout>

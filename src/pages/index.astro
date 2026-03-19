@@ -7,71 +7,91 @@ import cyanBlur from "../assets/blur-cyan.png";
 import indigoBlur from "../assets/blur-indigo.png";
 
 import TabbedWindow from "../components/TabbedWindow";
-import GenderFinder from "../components/GenderFinder";
 
 import HeroText from "../components/HeroText.astro";
 
 import { GITHUB_REPO } from "../constants.ts";
 ---
 
-<Layout title="Welcome to Astro.">
-  <div class="flex w-full flex-col">
-    <Header reporHref={GITHUB_REPO} client:load />
-    <div
-      class="overflow-hidden dark:bg-slate-900 dark:-mb-32 dark:mt-[-4.75rem] dark:pb-32 dark:pt-[4.75rem]"
-    >
-      <div class="py-16 sm:px-2 lg:relative lg:px-0 lg:py-20">
-        <div
-          class="mx-auto grid max-w-8xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 lg:max-w-8xl lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12"
-        >
-          <HeroText repoHref={GITHUB_REPO} />
+<Layout title="Gender Engine - Find the Gender of any Name">
+  <div class="flex w-full flex-col min-h-screen">
+    <Header repoHref={GITHUB_REPO} client:load />
 
-          <div class="grow relative lg:static xl:pl-10">
-            <div class="relative">
-              <Image
-                src={cyanBlur}
-                alt="Cyan blur"
-                height={530}
-                width={530}
-                style="color:transparent"
-                class="absolute -right-64 -top-64"
-              />
-              <Image
-                src={indigoBlur}
-                alt="Cyan blur"
-                height={567}
-                width={567}
-                style="color:transparent"
-                class="absolute -bottom-40 -right-44"
-              />
+    <main class="flex-1">
+      <div class="overflow-hidden">
+        <div class="py-16 sm:px-2 lg:relative lg:px-0 lg:py-20">
+          <div
+            class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12"
+          >
+            <HeroText repoHref={GITHUB_REPO} />
 
-              <div
-                class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg"
-              >
-              </div>
-              <div
-                class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10"
-              >
-              </div>
-              <div
-                class="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur"
-              >
+            <div class="grow relative lg:static xl:pl-10">
+              <div class="relative">
+                <Image
+                  src={cyanBlur}
+                  alt=""
+                  height={530}
+                  width={530}
+                  style="color:transparent"
+                  class="absolute -right-64 -top-64"
+                />
+                <Image
+                  src={indigoBlur}
+                  alt=""
+                  height={567}
+                  width={567}
+                  style="color:transparent"
+                  class="absolute -bottom-40 -right-44"
+                />
+
                 <div
-                  class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0"
+                  class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg"
                 >
                 </div>
                 <div
-                  class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0"
+                  class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10"
                 >
                 </div>
-                <TabbedWindow client:load />
+                <div
+                  class="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur"
+                >
+                  <div
+                    class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0"
+                  >
+                  </div>
+                  <div
+                    class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0"
+                  >
+                  </div>
+                  <TabbedWindow client:load />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </main>
 
-      <GenderFinder />
-    </div>
+    <footer class="border-t border-slate-200 dark:border-slate-700/40">
+      <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-slate-500 dark:text-slate-400">
+            <span style="font-family: 'JetBrains Mono', monospace;" class="font-medium text-slate-700 dark:text-slate-300">Gender Engine</span>
+            <span class="hidden sm:block text-slate-300 dark:text-slate-600">&middot;</span>
+            <span>Open-source &amp; self-hosted</span>
+          </div>
+          <div class="flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+            <a href="/docs" class="hover:text-slate-700 dark:hover:text-slate-300 transition-colors">Docs</a>
+            <a href={GITHUB_REPO} class="hover:text-slate-700 dark:hover:text-slate-300 transition-colors">GitHub</a>
+          </div>
+        </div>
+        <div class="mt-8 border-t border-slate-200 dark:border-slate-700/40 pt-6">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+            <p>This project does not collect, store, or process any personal data. All API requests are stateless and not logged.</p>
+            <p class="shrink-0">No cookies. No tracking. No analytics.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </Layout>

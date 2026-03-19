@@ -7,17 +7,24 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
+		<meta name="description" content="A simple, free API to determine the gender of any name. Self-hosted and open-source." />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<script is:inline>
+			if (localStorage.getItem("theme") === "light") {
+				document.documentElement.classList.remove("dark");
+			}
+		</script>
 	</head>
-	<body class="flex min-h-full bg-white dark:bg-slate-900">
+	<body class="flex min-h-full flex-col bg-white antialiased dark:bg-slate-900" style="font-family: 'Inter', system-ui, sans-serif;">
 		<slot />
 	</body>
 </html>
-
