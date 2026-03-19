@@ -5,37 +5,13 @@ import { Image } from "astro:assets";
 
 import cyanBlur from "../assets/blur-cyan.png";
 import indigoBlur from "../assets/blur-indigo.png";
-import { Code } from "astro:components";
 
-import Window from "../components/AppWindow.astro";
+import TabbedWindow from "../components/TabbedWindow";
 import GenderFinder from "../components/GenderFinder";
-
-import draculaTransparentTheme from "../../shiki/themes/dracula-transparent.json";
 
 import HeroText from "../components/HeroText.astro";
 
 import { GITHUB_REPO } from "../constants.ts";
-
-const dockerSnippet = `# Download the image
-$ docker pull ghcr.io/cryling/gender-engine:latest
-
-# Run the image
-$ docker run -p 8080:8080 ghcr.io/cryling/gender-engine
-
-# Off you go!
-$ curl -X GET "http://localhost:8080/api/v1/gender?name=tom&country=US"
-{
-  "message": "tom could be found",
-  "result": {
-    "Name": "tom",
-    "Gender": "US",
-    "Country": "M",
-    "Probability": "0.99560356"
-  }
-}
-`;
-
-const draculaTheme = JSON.parse(JSON.stringify(draculaTransparentTheme));
 ---
 
 <Layout title="Welcome to Astro.">
@@ -88,16 +64,7 @@ const draculaTheme = JSON.parse(JSON.stringify(draculaTransparentTheme));
                   class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0"
                 >
                 </div>
-                <Window>
-                  <div class="mt-4 flex items-start px-1 text-sm">
-                    <Code
-                      lang="bash"
-                      code={dockerSnippet}
-                      theme={draculaTheme}
-                      class={"pb-6"}
-                    />
-                  </div>
-                </Window>
+                <TabbedWindow client:load />
               </div>
             </div>
           </div>
