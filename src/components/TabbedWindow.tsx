@@ -29,7 +29,7 @@ const dockerSnippetLines = [
 
 function QuickStartContent() {
   return (
-    <pre class="px-6 pt-4 pb-6 font-mono text-sm leading-relaxed whitespace-pre">
+    <pre class="px-6 pt-4 pb-6 font-mono text-sm leading-relaxed whitespace-pre overflow-x-auto no-scrollbar">
       {dockerSnippetLines.map((line) => {
         if (line.type === "blank") return "\n";
         if (line.type === "comment")
