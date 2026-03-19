@@ -175,29 +175,29 @@ export default function Terminal() {
         {(line) => {
           if (line.type === "info") {
             return (
-              <div class="px-6 font-mono text-sm text-neutral-400 leading-relaxed">
+              <div class="px-6 font-mono text-sm text-neutral-400 dark:text-neutral-400 leading-relaxed">
                 {line.text || "\u00A0"}
               </div>
             );
           }
           if (line.type === "input") {
             return (
-              <div class="px-6 font-mono text-sm text-white leading-relaxed">
-                <span class="text-gray-400">$&nbsp;</span>
+              <div class="px-6 font-mono text-sm text-neutral-800 dark:text-white leading-relaxed">
+                <span class="text-neutral-400 dark:text-gray-400">$&nbsp;</span>
                 {line.text}
               </div>
             );
           }
           if (line.type === "output") {
             return (
-              <div class="px-6 font-mono text-sm text-[#8be9fd] leading-relaxed">
+              <div class="px-6 font-mono text-sm text-teal-600 dark:text-[#8be9fd] leading-relaxed">
                 {line.text}
               </div>
             );
           }
           if (line.type === "json") {
             return (
-              <pre class="px-6 font-mono text-sm text-[#f1fa8c] leading-relaxed whitespace-pre">
+              <pre class="px-6 font-mono text-sm text-amber-600 dark:text-[#f1fa8c] leading-relaxed whitespace-pre">
                 {line.text}
               </pre>
             );
@@ -208,7 +208,7 @@ export default function Terminal() {
 
       {!isProcessing() && (
         <div class="group flex items-center font-mono text-sm px-6">
-          <span class="text-gray-400">$&nbsp;</span>
+          <span class="text-neutral-400 dark:text-gray-400">$&nbsp;</span>
           <div class="relative group/input flex items-center overflow-x-scroll no-scrollbar caret-transparent pr-[10px]">
             <span
               ref={(el) => (currentInputRef = el)}
@@ -229,7 +229,7 @@ export default function Terminal() {
               onTouchStart={() => handleKeyUp()}
               onPaste={() => handleKeyUp()}
               onCut={() => handleKeyUp()}
-              class="text-white flex gap-2 flex-wrap focus:outline-none whitespace-nowrap"
+              class="text-neutral-800 dark:text-white flex gap-2 flex-wrap focus:outline-none whitespace-nowrap"
             />
             <div
               class="absolute inset-0 flex items-center pointer-events-none"
@@ -241,7 +241,7 @@ export default function Terminal() {
                 </span>
                 <div
                   ref={(el) => (carretDivRef = el)}
-                  class="hidden group-has-[:focus]/input:block bg-white w-[10px] h-[21px] shrink-0 animate-blink"
+                  class="hidden group-has-[:focus]/input:block bg-neutral-800 dark:bg-white w-[10px] h-[21px] shrink-0 animate-blink"
                 />
                 <span class="text-transparent" />
               </div>
@@ -251,7 +251,7 @@ export default function Terminal() {
       )}
 
       {isProcessing() && (
-        <div class="px-6 font-mono text-sm text-neutral-500 animate-pulse">
+        <div class="px-6 font-mono text-sm text-neutral-400 dark:text-neutral-500 animate-pulse">
           Loading...
         </div>
       )}
