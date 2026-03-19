@@ -1,5 +1,5 @@
 import { createSignal, For, onMount } from "solid-js";
-import "../styles/utils.css";
+import "../styles/global.css";
 
 interface TerminalLine {
   type: "prompt" | "input" | "output" | "info" | "json";

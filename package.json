@@ -10,12 +10,19 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.2",
-    "@astrojs/solid-js": "^4.4.1",
-    "@astrojs/tailwind": "^5.1.0",
-    "astro": "^4.14.2",
-    "solid-js": "^1.8.17",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5"
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/solid-js": "^6.0.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.0.6",
+    "sharp": "^0.34.5",
+    "solid-js": "^1.9.11",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
