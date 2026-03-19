@@ -16,6 +16,31 @@
   100% { opacity: 0; }
 }
 
+/* Animated border */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.animated-border {
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 40%,
+    #34d399 50%,
+    #10b981 55%,
+    transparent 60%
+  );
+  animation: rotate-border 12s linear infinite;
+  border-radius: 1rem;
+}
+
+@keyframes rotate-border {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
 /* Utility: hide scrollbar */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

@@ -52,18 +52,10 @@ import { GITHUB_REPO } from "../constants.ts";
                   class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-emerald-300 via-emerald-300/70 to-green-300 opacity-10"
                 >
                 </div>
-                <div
-                  class="relative rounded-2xl bg-[#111111]/80 ring-1 ring-white/10 backdrop-blur"
-                >
-                  <div
-                    class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-emerald-300/0 via-emerald-300/70 to-emerald-300/0"
-                  >
+                <div class="animated-border relative rounded-2xl p-px">
+                  <div class="relative rounded-2xl bg-[#111111] backdrop-blur overflow-hidden">
+                    <TabbedWindow client:load />
                   </div>
-                  <div
-                    class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-green-400/0 via-green-400 to-green-400/0"
-                  >
-                  </div>
-                  <TabbedWindow client:load />
                 </div>
               </div>
             </div>
