@@ -27,14 +27,14 @@ export default function Header(props: HeaderProps) {
     <header
       class={`sticky top-0 z-50 flex items-center justify-between px-4 py-4 transition-all duration-200 sm:px-6 lg:px-8 border-b ${
         scrolled()
-          ? "border-slate-200 bg-white/90 backdrop-blur-md dark:border-slate-700/50 dark:bg-slate-900/90"
+          ? "border-neutral-200 bg-white/90 backdrop-blur-md dark:border-neutral-700/50 dark:bg-neutral-900/90"
           : "border-transparent bg-transparent"
       }`}
     >
       <div class="flex items-center gap-8">
         <a class="flex items-center gap-2" href="/">
           <span
-            class="text-lg font-bold tracking-tight text-slate-900 dark:text-white"
+            class="text-lg font-bold tracking-tight text-neutral-900 dark:text-white"
             style="font-family: 'JetBrains Mono', monospace;"
           >
             Gender Engine
@@ -43,13 +43,13 @@ export default function Header(props: HeaderProps) {
         <nav class="hidden sm:flex items-center gap-6 text-sm font-medium">
           <a
             href="/docs"
-            class="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
+            class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
           >
             Docs
           </a>
           <a
             href={props.repoHref}
-            class="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
+            class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
           >
             GitHub
           </a>
@@ -59,7 +59,7 @@ export default function Header(props: HeaderProps) {
       <div class="flex items-center gap-3">
         <button
           onClick={toggleDarkMode}
-          class="rounded-lg p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors"
+          class="rounded-lg p-2 text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-neutral-800 transition-colors"
           aria-label="Toggle dark mode"
         >
           {isDark() ? (
@@ -74,7 +74,7 @@ export default function Header(props: HeaderProps) {
         </button>
 
         <a
-          class="sm:hidden rounded-lg p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors"
+          class="sm:hidden rounded-lg p-2 text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-neutral-800 transition-colors"
           aria-label="GitHub"
           href={props.repoHref}
         >

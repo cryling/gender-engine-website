@@ -175,7 +175,7 @@ export default function Terminal() {
         {(line) => {
           if (line.type === "info") {
             return (
-              <div class="px-6 font-mono text-sm text-slate-400 leading-relaxed">
+              <div class="px-6 font-mono text-sm text-neutral-400 leading-relaxed">
                 {line.text || "\u00A0"}
               </div>
             );
@@ -251,7 +251,7 @@ export default function Terminal() {
       )}
 
       {isProcessing() && (
-        <div class="px-6 font-mono text-sm text-slate-500 animate-pulse">
+        <div class="px-6 font-mono text-sm text-neutral-500 animate-pulse">
           Loading...
         </div>
       )}

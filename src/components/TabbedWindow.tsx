@@ -78,7 +78,7 @@ export default function TabbedWindow() {
           aria-hidden="true"
           viewBox="0 0 42 10"
           fill="none"
-          class="h-2.5 w-auto stroke-slate-500/30"
+          class="h-2.5 w-auto stroke-neutral-500/30"
         >
           <circle cx="5" cy="5" r="4.5" />
           <circle cx="21" cy="5" r="4.5" />
@@ -93,7 +93,7 @@ export default function TabbedWindow() {
             class={`px-4 py-2 text-xs font-medium rounded-t-lg transition-colors ${
               activeTab() === i
                 ? "bg-white/10 text-white"
-                : "text-slate-400 hover:text-slate-300 hover:bg-white/5"
+                : "text-neutral-400 hover:text-neutral-300 hover:bg-white/5"
             }`}
           >
             {tab}
