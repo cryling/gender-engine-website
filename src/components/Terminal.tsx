@@ -6,53 +6,13 @@ interface TerminalLine {
   text: string;
 }
 
-const MOCK_GENDERS: Record<string, { gender: string; probability: string }> = {
-  tom: { gender: "M", probability: "0.9956" },
-  thomas: { gender: "M", probability: "0.9981" },
-  anna: { gender: "F", probability: "0.9945" },
-  maria: { gender: "F", probability: "0.9978" },
-  john: { gender: "M", probability: "0.9992" },
-  jane: { gender: "F", probability: "0.9967" },
-  alex: { gender: "M", probability: "0.6234" },
-  sam: { gender: "M", probability: "0.6012" },
-  emma: { gender: "F", probability: "0.9989" },
-  james: { gender: "M", probability: "0.9995" },
-  sarah: { gender: "F", probability: "0.9971" },
-  chris: { gender: "M", probability: "0.7845" },
-  jordan: { gender: "M", probability: "0.5234" },
-  taylor: { gender: "F", probability: "0.5567" },
-  kim: { gender: "F", probability: "0.7823" },
-  max: { gender: "M", probability: "0.9876" },
-  sophie: { gender: "F", probability: "0.9934" },
-  kai: { gender: "M", probability: "0.6789" },
-  robin: { gender: "M", probability: "0.5612" },
-  lisa: { gender: "F", probability: "0.9956" },
-};
+const API_BASE = "https://gender.kianreiling.com";
 
-function getGenderResult(name: string): { gender: string; probability: string } {
-  const lower = name.toLowerCase().trim();
-  if (MOCK_GENDERS[lower]) return MOCK_GENDERS[lower];
-  // Generate a deterministic-looking result based on name
-  const hash = [...lower].reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  const gender = hash % 2 === 0 ? "F" : "M";
-  const prob = (0.5 + (hash % 50) / 100).toFixed(4);
-  return { gender, probability: prob };
-}
-
-function formatJsonResponse(name: string): string {
-  const { gender, probability } = getGenderResult(name);
-  return JSON.stringify(
-    {
-      message: `${name.toLowerCase()} could be found`,
-      result: {
-        Name: name.toLowerCase(),
-        Gender: gender,
-        Probability: probability,
-      },
-    },
-    null,
-    2
-  );
+async function fetchGenderResult(name: string): Promise<string> {
+  const url = `${API_BASE}/api/v1/gender?name=${encodeURIComponent(name.toLowerCase().trim())}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return JSON.stringify(data, null, 2);
 }
 
 export default function Terminal() {
@@ -142,23 +102,26 @@ export default function Terminal() {
       return;
     }
 
-    // Simulate the curl command
     const name = rawInput.split(/\s+/)[0]; // Take first word as the name
     newLines.push({
       type: "output",
-      text: `> curl -X GET "http://localhost:8080/api/v1/gender?name=${name.toLowerCase()}"`,
+      text: `> curl -X GET "${API_BASE}/api/v1/gender?name=${name.toLowerCase()}"`,
     });
     setLines([...newLines]);
     setTimeout(scrollToBottom, 0);
 
-    // Simulate network delay
-    await new Promise((r) => setTimeout(r, 400 + Math.random() * 400));
-
-    const json = formatJsonResponse(name);
-    newLines.push(
-      { type: "json", text: json },
-      { type: "info", text: "" }
-    );
+    try {
+      const json = await fetchGenderResult(name);
+      newLines.push(
+        { type: "json", text: json },
+        { type: "info", text: "" }
+      );
+    } catch {
+      newLines.push(
+        { type: "info", text: "Error: could not reach the API." },
+        { type: "info", text: "" }
+      );
+    }
     setLines([...newLines]);
     setIsProcessing(false);
     setTimeout(scrollToBottom, 0);
