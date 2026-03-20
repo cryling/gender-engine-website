@@ -19,6 +19,7 @@ async function fetchGenderResult(name: string, country: Country | null): Promise
 
 interface TerminalProps {
   country: Country | null;
+  onReady?: (api: { focus: () => void }) => void;
 }
 
 export default function Terminal(props: TerminalProps) {
@@ -35,8 +36,13 @@ export default function Terminal(props: TerminalProps) {
   const [currentInputIndex, setCurrentInputIndex] = createSignal<number>(0);
   const [isProcessing, setIsProcessing] = createSignal(false);
 
+  const [history, setHistory] = createSignal<string[]>([]);
+  const [historyIndex, setHistoryIndex] = createSignal(-1);
+  const [savedInput, setSavedInput] = createSignal("");
+
   onMount(() => {
     currentInputRef?.focus();
+    props.onReady?.({ focus: () => currentInputRef?.focus() });
   });
 
   const scrollToBottom = () => {
@@ -66,14 +72,72 @@ export default function Terminal(props: TerminalProps) {
     setCurrentInputIndex(window.getSelection()?.anchorOffset || 0);
   };
 
+  const setInputText = (text: string) => {
+    setCurrentInput(text.replace(/ /g, "&nbsp"));
+    if (currentInputRef) currentInputRef.textContent = text;
+    // Move browser caret + visual overlay caret to end
+    requestAnimationFrame(() => {
+      if (currentInputRef && currentInputRef.childNodes.length > 0) {
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.setStart(currentInputRef.childNodes[0], text.length);
+        range.collapse(true);
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+      setCurrentInputIndex(text.length);
+      if (carretDivRef) {
+        carretDivRef.classList.remove("animate-blink");
+        setTimeout(() => carretDivRef?.classList.add("animate-blink"), 200);
+      }
+    });
+  };
+
+  const handleHistoryNav = (event: KeyboardEvent) => {
+    const hist = history();
+    if (hist.length === 0) return;
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      const idx = historyIndex();
+      if (idx === -1) {
+        setSavedInput(currentInput().replace(/&nbsp/g, " "));
+        setHistoryIndex(hist.length - 1);
+        setInputText(hist[hist.length - 1]);
+      } else if (idx > 0) {
+        setHistoryIndex(idx - 1);
+        setInputText(hist[idx - 1]);
+      }
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      const idx = historyIndex();
+      if (idx === -1) return;
+      if (idx < hist.length - 1) {
+        setHistoryIndex(idx + 1);
+        setInputText(hist[idx + 1]);
+      } else {
+        setHistoryIndex(-1);
+        setInputText(savedInput());
+      }
+    }
+  };
+
   const handleTerminalSubmit = async (event: KeyboardEvent) => {
     handleKeyUp();
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+      handleHistoryNav(event);
+      return;
+    }
     if (event.key !== "Enter") return;
     event.preventDefault();
     if (isProcessing()) return;
 
     const rawInput = currentInput().replace(/&nbsp/g, " ").trim();
     if (!rawInput) return;
+
+    setHistory((prev) => [...prev, rawInput]);
+    setHistoryIndex(-1);
+    setSavedInput("");
 
     setIsProcessing(true);
     setCurrentInput("");
@@ -153,7 +217,7 @@ export default function Terminal(props: TerminalProps) {
           if (line.type === "input") {
             return (
               <div class="px-6 font-mono text-sm text-neutral-800 dark:text-white leading-relaxed">
-                <span class="text-neutral-400 dark:text-gray-400">$&nbsp;</span>
+                <span class="text-emerald-600 dark:text-[#bd93f9]">$&nbsp;</span>
                 {line.text}
               </div>
             );
@@ -178,11 +242,12 @@ export default function Terminal(props: TerminalProps) {
 
       {!isProcessing() && (
         <div class="group flex items-center font-mono text-sm px-6">
-          <span class="text-neutral-400 dark:text-gray-400">$&nbsp;</span>
+          <span class="text-emerald-600 dark:text-[#bd93f9]">$&nbsp;</span>
           <div class="relative group/input flex items-center overflow-x-scroll no-scrollbar caret-transparent pr-[10px]">
             <span
               ref={(el) => (currentInputRef = el)}
               contentEditable={true}
+              spellcheck={false}
               onInput={(event) =>
                 handleTerminalInput(
                   event as InputEvent & {

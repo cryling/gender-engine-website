@@ -63,6 +63,7 @@ export default function TabbedWindow() {
   const [activeTab, setActiveTab] = createSignal<number>(0);
   const [showDot, setShowDot] = createSignal(false);
   const [country, setCountry] = createSignal<Country | null>(null);
+  let terminalApi: { focus: () => void } | undefined;
 
   onMount(() => {
     if (!localStorage.getItem(TRIED_KEY)) {
@@ -75,6 +76,7 @@ export default function TabbedWindow() {
     if (i === 1) {
       setShowDot(false);
       localStorage.setItem(TRIED_KEY, "1");
+      setTimeout(() => terminalApi?.focus(), 0);
     }
   };
 
@@ -119,7 +121,7 @@ export default function TabbedWindow() {
           <QuickStartContent country={country()} />
         </div>
         <div class={activeTab() === 1 ? "" : "hidden"}>
-          <Terminal country={country()} />
+          <Terminal country={country()} onReady={(api) => (terminalApi = api)} />
         </div>
       </div>
     </div>
