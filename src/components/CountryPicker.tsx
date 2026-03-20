@@ -116,7 +116,7 @@ export default function CountryPicker(props: CountryPickerProps) {
               type="text"
               placeholder="Search countries..."
               value={search()}
-              onInput={(e) => { setSearch(e.currentTarget.value); setHighlightIndex(0); }}
+              onInput={(e) => { setSearch(e.currentTarget.value); setHighlightIndex(e.currentTarget.value ? 1 : 0); }}
               onKeyDown={handleKeyDown}
               class="w-full px-3 py-1.5 text-sm rounded-lg bg-neutral-50 border border-neutral-200 text-neutral-900 placeholder-neutral-400 outline-none focus:border-neutral-300 dark:bg-neutral-900 dark:border-neutral-600 dark:text-white dark:placeholder-neutral-500 dark:focus:border-neutral-500"
             />
