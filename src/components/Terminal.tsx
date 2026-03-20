@@ -12,7 +12,7 @@ const API_BASE = "https://gender.kianreiling.com";
 async function fetchGenderResult(name: string, country: Country | null): Promise<string> {
   const params = new URLSearchParams({ name: name.toLowerCase().trim() });
   if (country) params.set("country", country.code);
-  const res = await fetch(`/api/v1/gender?${params}`);
+  const res = await fetch(`${API_BASE}/api/v1/gender?${params}`);
   const data = await res.json();
   return JSON.stringify(data, null, 2);
 }
