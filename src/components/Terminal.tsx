@@ -9,7 +9,7 @@ interface TerminalLine {
 const API_BASE = "https://gender.kianreiling.com";
 
 async function fetchGenderResult(name: string): Promise<string> {
-  const url = `${API_BASE}/api/v1/gender?name=${encodeURIComponent(name.toLowerCase().trim())}`;
+  const url = `/api/v1/gender?name=${encodeURIComponent(name.toLowerCase().trim())}`;
   const res = await fetch(url);
   const data = await res.json();
   return JSON.stringify(data, null, 2);
