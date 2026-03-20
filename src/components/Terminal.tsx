@@ -1,20 +1,34 @@
 import { createSignal, For, onMount } from "solid-js";
-import type { Country } from "./CountryPicker";
+import type { Country } from "../data/countries";
 import "../styles/global.css";
 
 interface TerminalLine {
-  type: "prompt" | "input" | "output" | "info" | "json";
+  type: "input" | "output" | "info" | "json";
   text: string;
 }
 
 const API_BASE = "https://gender.kianreiling.com";
 
+const WELCOME_LINES: TerminalLine[] = [
+  { type: "info", text: "Welcome to Gender Engine!" },
+  { type: "info", text: "Type any name and press Enter to find its gender." },
+  { type: "info", text: "" },
+];
+
 async function fetchGenderResult(name: string, country: Country | null): Promise<string> {
   const params = new URLSearchParams({ name: name.toLowerCase().trim() });
   if (country) params.set("country", country.code);
-  const res = await fetch(`/api/v1/gender?${params}`);
+  const res = await fetch(`${API_BASE}/api/v1/gender?${params}`);
   const data = await res.json();
   return JSON.stringify(data, null, 2);
+}
+
+function encodeSpaces(text: string): string {
+  return text.replace(/ /g, "\u00A0");
+}
+
+function decodeSpaces(text: string): string {
+  return text.replace(/\u00A0/g, " ");
 }
 
 interface TerminalProps {
@@ -23,17 +37,13 @@ interface TerminalProps {
 }
 
 export default function Terminal(props: TerminalProps) {
-  let currentInputRef: HTMLSpanElement | undefined;
-  let carretDivRef: HTMLDivElement | undefined;
+  let inputRef: HTMLSpanElement | undefined;
+  let caretRef: HTMLDivElement | undefined;
   let containerRef: HTMLDivElement | undefined;
 
-  const [lines, setLines] = createSignal<TerminalLine[]>([
-    { type: "info", text: "Welcome to Gender Engine!" },
-    { type: "info", text: "Type any name and press Enter to find its gender." },
-    { type: "info", text: "" },
-  ]);
-  const [currentInput, setCurrentInput] = createSignal<string>("");
-  const [currentInputIndex, setCurrentInputIndex] = createSignal<number>(0);
+  const [lines, setLines] = createSignal<TerminalLine[]>([...WELCOME_LINES]);
+  const [currentInput, setCurrentInput] = createSignal("");
+  const [caretIndex, setCaretIndex] = createSignal(0);
   const [isProcessing, setIsProcessing] = createSignal(false);
 
   const [history, setHistory] = createSignal<string[]>([]);
@@ -41,8 +51,8 @@ export default function Terminal(props: TerminalProps) {
   const [savedInput, setSavedInput] = createSignal("");
 
   onMount(() => {
-    currentInputRef?.focus();
-    props.onReady?.({ focus: () => currentInputRef?.focus() });
+    inputRef?.focus();
+    props.onReady?.({ focus: () => inputRef?.focus() });
   });
 
   const scrollToBottom = () => {
@@ -51,65 +61,54 @@ export default function Terminal(props: TerminalProps) {
     }
   };
 
-  const handleTerminalInput = (
-    event: InputEvent & {
-      currentTarget: HTMLSpanElement;
-      target: HTMLSpanElement;
-    }
-  ) => {
-    handleKeyUp();
-    setCurrentInput(
-      event.currentTarget.textContent?.replace(/ /g, "&nbsp") || ""
-    );
+  const resetCaretBlink = () => {
+    if (!caretRef) return;
+    caretRef.classList.remove("animate-blink");
+    setTimeout(() => caretRef?.classList.add("animate-blink"), 200);
   };
 
-  const handleKeyUp = () => {
-    if (!carretDivRef) return;
-    carretDivRef.classList.remove("animate-blink");
-    setTimeout(() => {
-      carretDivRef?.classList.add("animate-blink"), 200;
-    });
-    setCurrentInputIndex(window.getSelection()?.anchorOffset || 0);
+  const syncCaretPosition = () => {
+    resetCaretBlink();
+    setCaretIndex(window.getSelection()?.anchorOffset || 0);
   };
 
   const setInputText = (text: string) => {
-    setCurrentInput(text.replace(/ /g, "&nbsp"));
-    if (currentInputRef) currentInputRef.textContent = text;
-    // Move browser caret + visual overlay caret to end
+    setCurrentInput(encodeSpaces(text));
+    if (inputRef) inputRef.textContent = text;
     requestAnimationFrame(() => {
-      if (currentInputRef && currentInputRef.childNodes.length > 0) {
+      if (inputRef && inputRef.childNodes.length > 0) {
         const range = document.createRange();
         const sel = window.getSelection();
-        range.setStart(currentInputRef.childNodes[0], text.length);
+        range.setStart(inputRef.childNodes[0], text.length);
         range.collapse(true);
         sel?.removeAllRanges();
         sel?.addRange(range);
       }
-      setCurrentInputIndex(text.length);
-      if (carretDivRef) {
-        carretDivRef.classList.remove("animate-blink");
-        setTimeout(() => carretDivRef?.classList.add("animate-blink"), 200);
-      }
+      setCaretIndex(text.length);
+      resetCaretBlink();
     });
   };
 
-  const handleHistoryNav = (event: KeyboardEvent) => {
+  const handleInput = (event: InputEvent & { currentTarget: HTMLSpanElement }) => {
+    syncCaretPosition();
+    setCurrentInput(encodeSpaces(event.currentTarget.textContent || ""));
+  };
+
+  const handleHistoryNav = (direction: "up" | "down") => {
     const hist = history();
     if (hist.length === 0) return;
 
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
+    if (direction === "up") {
       const idx = historyIndex();
       if (idx === -1) {
-        setSavedInput(currentInput().replace(/&nbsp/g, " "));
+        setSavedInput(decodeSpaces(currentInput()));
         setHistoryIndex(hist.length - 1);
         setInputText(hist[hist.length - 1]);
       } else if (idx > 0) {
         setHistoryIndex(idx - 1);
         setInputText(hist[idx - 1]);
       }
-    } else if (event.key === "ArrowDown") {
-      event.preventDefault();
+    } else {
       const idx = historyIndex();
       if (idx === -1) return;
       if (idx < hist.length - 1) {
@@ -122,28 +121,29 @@ export default function Terminal(props: TerminalProps) {
     }
   };
 
-  const handleTerminalSubmit = async (event: KeyboardEvent) => {
-    handleKeyUp();
+  const handleKeyDown = (event: KeyboardEvent) => {
+    syncCaretPosition();
+
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-      handleHistoryNav(event);
+      event.preventDefault();
+      handleHistoryNav(event.key === "ArrowUp" ? "up" : "down");
       return;
     }
+
     if (event.key !== "Enter") return;
     event.preventDefault();
     if (isProcessing()) return;
 
-    const rawInput = currentInput().replace(/&nbsp/g, " ").trim();
+    const rawInput = decodeSpaces(currentInput()).trim();
     if (!rawInput) return;
 
     setHistory((prev) => [...prev, rawInput]);
     setHistoryIndex(-1);
     setSavedInput("");
-
     setIsProcessing(true);
     setCurrentInput("");
-    if (currentInputRef) currentInputRef.textContent = "";
+    if (inputRef) inputRef.textContent = "";
 
-    // Show the typed input as a prompt line
     const newLines: TerminalLine[] = [
       ...lines(),
       { type: "input", text: rawInput },
@@ -152,7 +152,7 @@ export default function Terminal(props: TerminalProps) {
     if (rawInput.toLowerCase() === "help") {
       newLines.push(
         { type: "info", text: "Usage: type any first name to look up its gender." },
-        { type: "info", text: 'Example: tom, anna, alex, jordan' },
+        { type: "info", text: "Example: tom, anna, alex, jordan" },
         { type: "info", text: 'Type "clear" to reset the terminal.' },
         { type: "info", text: "" }
       );
@@ -163,16 +163,12 @@ export default function Terminal(props: TerminalProps) {
     }
 
     if (rawInput.toLowerCase() === "clear") {
-      setLines([
-        { type: "info", text: "Welcome to Gender Engine!" },
-        { type: "info", text: "Type any name and press Enter to find its gender." },
-        { type: "info", text: "" },
-      ]);
+      setLines([...WELCOME_LINES]);
       setIsProcessing(false);
       return;
     }
 
-    const name = rawInput.split(/\s+/)[0]; // Take first word as the name
+    const name = rawInput.split(/\s+/)[0];
     const countryParam = props.country ? `&country=${props.country.code}` : "";
     newLines.push({
       type: "output",
@@ -181,29 +177,29 @@ export default function Terminal(props: TerminalProps) {
     setLines([...newLines]);
     setTimeout(scrollToBottom, 0);
 
-    try {
-      const json = await fetchGenderResult(name, props.country);
-      newLines.push(
-        { type: "json", text: json },
-        { type: "info", text: "" }
-      );
-    } catch {
-      newLines.push(
-        { type: "info", text: "Error: could not reach the API." },
-        { type: "info", text: "" }
-      );
-    }
-    setLines([...newLines]);
-    setIsProcessing(false);
-    setTimeout(scrollToBottom, 0);
-    setTimeout(() => currentInputRef?.focus(), 10);
+    fetchGenderResult(name, props.country)
+      .then((json) => {
+        newLines.push({ type: "json", text: json }, { type: "info", text: "" });
+      })
+      .catch(() => {
+        newLines.push(
+          { type: "info", text: "Error: could not reach the API." },
+          { type: "info", text: "" }
+        );
+      })
+      .finally(() => {
+        setLines([...newLines]);
+        setIsProcessing(false);
+        setTimeout(scrollToBottom, 0);
+        setTimeout(() => inputRef?.focus(), 10);
+      });
   };
 
   return (
     <div
       ref={(el) => (containerRef = el)}
-      onClick={() => currentInputRef?.focus()}
-      class="max-h-[340px] overflow-y-auto no-scrollbar py-4 cursor-text"
+      onClick={() => inputRef?.focus()}
+      class="max-h-85 overflow-y-auto no-scrollbar py-4 cursor-text"
     >
       <For each={lines()}>
         {(line) => {
@@ -243,27 +239,19 @@ export default function Terminal(props: TerminalProps) {
       {!isProcessing() && (
         <div class="group flex items-center font-mono text-sm px-6">
           <span class="text-emerald-600 dark:text-[#bd93f9]">$&nbsp;</span>
-          <div class="relative group/input flex items-center overflow-x-scroll no-scrollbar caret-transparent pr-[10px]">
+          <div class="relative group/input flex items-center overflow-x-scroll no-scrollbar caret-transparent pr-2.5">
             <span
-              ref={(el) => (currentInputRef = el)}
+              ref={(el) => (inputRef = el)}
               contentEditable={true}
               spellcheck={false}
-              onInput={(event) =>
-                handleTerminalInput(
-                  event as InputEvent & {
-                    currentTarget: HTMLSpanElement;
-                    target: HTMLSpanElement;
-                  }
-                )
-              }
-              onKeyDown={(event) => handleTerminalSubmit(event as KeyboardEvent)}
-              onKeyUp={() => handleKeyUp()}
-              onSelect={() => handleKeyUp()}
-              onMouseMove={() => handleKeyUp()}
-              onMouseUp={() => handleKeyUp()}
-              onTouchStart={() => handleKeyUp()}
-              onPaste={() => handleKeyUp()}
-              onCut={() => handleKeyUp()}
+              onInput={(e) => handleInput(e as InputEvent & { currentTarget: HTMLSpanElement })}
+              onKeyDown={handleKeyDown}
+              onKeyUp={syncCaretPosition}
+              onSelect={syncCaretPosition}
+              onMouseUp={syncCaretPosition}
+              onTouchStart={syncCaretPosition}
+              onPaste={syncCaretPosition}
+              onCut={syncCaretPosition}
               class="text-neutral-800 dark:text-white flex gap-2 flex-wrap focus:outline-none whitespace-nowrap"
             />
             <div
@@ -272,11 +260,11 @@ export default function Terminal(props: TerminalProps) {
             >
               <div class="flex items-center whitespace-nowrap focus:outline-none">
                 <span class="text-transparent">
-                  {currentInput().substring(0, currentInputIndex())}
+                  {currentInput().substring(0, caretIndex())}
                 </span>
                 <div
-                  ref={(el) => (carretDivRef = el)}
-                  class="hidden group-has-[:focus]/input:block bg-neutral-800 dark:bg-white w-[10px] h-[21px] shrink-0 animate-blink"
+                  ref={(el) => (caretRef = el)}
+                  class="hidden group-has-focus/input:block bg-white w-2.5 h-5.25 shrink-0 animate-blink mix-blend-difference"
                 />
                 <span class="text-transparent" />
               </div>

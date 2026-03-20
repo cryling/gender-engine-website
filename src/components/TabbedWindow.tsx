@@ -1,41 +1,47 @@
 import { createSignal, onMount } from "solid-js";
 import Terminal from "./Terminal";
 import CountryPicker from "./CountryPicker";
-import type { Country } from "./CountryPicker";
+import type { Country } from "../data/countries";
 
 const tabs = ["Quick Start", "Try it"] as const;
 const TRIED_KEY = "tried-terminal";
 
-const API_BASE = "https://gender.kianreiling.com";
-
-function buildCurlExample(country: Country | null) {
-  const countryParam = country ? `&country=${country.code}` : "&country=US";
-  return `$ curl -X GET "http://localhost:8080/api/v1/gender?name=tom${countryParam}"`;
-}
-
 function QuickStartContent(props: { country: Country | null }) {
-  const countryCode = () => props.country?.code ?? "US";
-  const countryParam = () => props.country ? `&country=${props.country.code}` : "&country=US";
+  const dockerSnippetLines = () => {
+    const country = props.country;
+    const countryParam = country ? `&country=${country.code}` : "";
+    const curlCmd = `$ curl -X GET "http://localhost:8080/api/v1/gender?name=tom${countryParam}"`;
 
-  const dockerSnippetLines = () => [
-    { type: "comment" as const, text: "# Download the image" },
-    { type: "command" as const, text: "$ docker pull ghcr.io/cryling/gender-engine:latest" },
-    { type: "blank" as const },
-    { type: "comment" as const, text: "# Run the image" },
-    { type: "command" as const, text: "$ docker run -p 8080:8080 ghcr.io/cryling/gender-engine" },
-    { type: "blank" as const },
-    { type: "comment" as const, text: "# Off you go!" },
-    { type: "command" as const, text: buildCurlExample(props.country) },
-    { type: "json" as const, text: "{" },
-    { type: "json-key" as const, key: "message", value: '"tom could be found"', last: false },
-    { type: "json-nested-start" as const, key: "result", text: "{" },
-    { type: "json-key" as const, key: "Name", value: '"tom"', last: false, indent: 2 },
-    { type: "json-key" as const, key: "Gender", value: '"M"', last: false, indent: 2 },
-    { type: "json-key" as const, key: "Country", value: `"${countryCode()}"`, last: false, indent: 2 },
-    { type: "json-key" as const, key: "Probability", value: '"0.99560356"', last: true, indent: 2 },
-    { type: "json" as const, text: "  }" },
-    { type: "json" as const, text: "}" },
-  ];
+    const resultFields: { type: "json-key"; key: string; value: string; last: boolean; indent: 2 }[] = [
+      { type: "json-key", key: "Name", value: '"tom"', last: false, indent: 2 },
+      { type: "json-key", key: "Gender", value: '"M"', last: !country, indent: 2 },
+    ];
+    if (country) {
+      resultFields.push(
+        { type: "json-key", key: "Country", value: `"${country.code}"`, last: false, indent: 2 },
+        { type: "json-key", key: "Probability", value: '"0.99560356"', last: true, indent: 2 },
+      );
+    }
+
+    const message = country ? '"tom could be found in ' + country.code + '"' : '"tom could be found"';
+
+    return [
+      { type: "comment" as const, text: "# Download the image" },
+      { type: "command" as const, text: "$ docker pull ghcr.io/cryling/gender-engine:latest" },
+      { type: "blank" as const },
+      { type: "comment" as const, text: "# Run the image" },
+      { type: "command" as const, text: "$ docker run -p 8080:8080 ghcr.io/cryling/gender-engine" },
+      { type: "blank" as const },
+      { type: "comment" as const, text: "# Off you go!" },
+      { type: "command" as const, text: curlCmd },
+      { type: "json" as const, text: "{" },
+      { type: "json-key" as const, key: "message", value: message, last: false },
+      { type: "json-nested-start" as const, key: "result", text: "{" },
+      ...resultFields,
+      { type: "json" as const, text: "  }" },
+      { type: "json" as const, text: "}" },
+    ];
+  };
 
   return (
     <pre class="px-6 pt-4 pb-6 font-mono text-sm leading-relaxed whitespace-pre overflow-x-auto no-scrollbar">
@@ -80,8 +86,16 @@ export default function TabbedWindow() {
     }
   };
 
+  const handleWindowClick = (e: MouseEvent) => {
+    if (activeTab() !== 1) return;
+    // Don't steal focus from buttons, inputs, or the country picker
+    const target = e.target as HTMLElement;
+    if (target.closest("button") || target.closest("input")) return;
+    terminalApi?.focus();
+  };
+
   return (
-    <div>
+    <div onClick={handleWindowClick} class={activeTab() === 1 ? "cursor-text" : ""}>
       <div class="pl-4 pt-4">
         <svg
           aria-hidden="true"
@@ -116,7 +130,7 @@ export default function TabbedWindow() {
         </div>
       </div>
 
-      <div class="min-h-[340px]">
+      <div class="min-h-85">
         <div class={activeTab() === 0 ? "" : "hidden"}>
           <QuickStartContent country={country()} />
         </div>
