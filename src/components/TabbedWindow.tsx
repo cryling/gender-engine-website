@@ -1,36 +1,45 @@
 import { createSignal, onMount } from "solid-js";
 import Terminal from "./Terminal";
+import CountryPicker from "./CountryPicker";
+import type { Country } from "./CountryPicker";
 
 const tabs = ["Quick Start", "Try it"] as const;
 const TRIED_KEY = "tried-terminal";
 
-const dockerSnippetLines = [
-  { type: "comment", text: "# Download the image" },
-  { type: "command", text: "$ docker pull ghcr.io/cryling/gender-engine:latest" },
-  { type: "blank" },
-  { type: "comment", text: "# Run the image" },
-  { type: "command", text: "$ docker run -p 8080:8080 ghcr.io/cryling/gender-engine" },
-  { type: "blank" },
-  { type: "comment", text: "# Off you go!" },
-  {
-    type: "command",
-    text: '$ curl -X GET "http://localhost:8080/api/v1/gender?name=tom&country=US"',
-  },
-  { type: "json", text: "{" },
-  { type: "json-key", key: "message", value: '"tom could be found"', last: false },
-  { type: "json-nested-start", key: "result", text: "{" },
-  { type: "json-key", key: "Name", value: '"tom"', last: false, indent: 2 },
-  { type: "json-key", key: "Gender", value: '"M"', last: false, indent: 2 },
-  { type: "json-key", key: "Country", value: '"US"', last: false, indent: 2 },
-  { type: "json-key", key: "Probability", value: '"0.99560356"', last: true, indent: 2 },
-  { type: "json", text: "  }" },
-  { type: "json", text: "}" },
-] as const;
+const API_BASE = "https://gender.kianreiling.com";
 
-function QuickStartContent() {
+function buildCurlExample(country: Country | null) {
+  const countryParam = country ? `&country=${country.code}` : "&country=US";
+  return `$ curl -X GET "http://localhost:8080/api/v1/gender?name=tom${countryParam}"`;
+}
+
+function QuickStartContent(props: { country: Country | null }) {
+  const countryCode = () => props.country?.code ?? "US";
+  const countryParam = () => props.country ? `&country=${props.country.code}` : "&country=US";
+
+  const dockerSnippetLines = () => [
+    { type: "comment" as const, text: "# Download the image" },
+    { type: "command" as const, text: "$ docker pull ghcr.io/cryling/gender-engine:latest" },
+    { type: "blank" as const },
+    { type: "comment" as const, text: "# Run the image" },
+    { type: "command" as const, text: "$ docker run -p 8080:8080 ghcr.io/cryling/gender-engine" },
+    { type: "blank" as const },
+    { type: "comment" as const, text: "# Off you go!" },
+    { type: "command" as const, text: buildCurlExample(props.country) },
+    { type: "json" as const, text: "{" },
+    { type: "json-key" as const, key: "message", value: '"tom could be found"', last: false },
+    { type: "json-nested-start" as const, key: "result", text: "{" },
+    { type: "json-key" as const, key: "Name", value: '"tom"', last: false, indent: 2 },
+    { type: "json-key" as const, key: "Gender", value: '"M"', last: false, indent: 2 },
+    { type: "json-key" as const, key: "Country", value: `"${countryCode()}"`, last: false, indent: 2 },
+    { type: "json-key" as const, key: "Probability", value: '"0.99560356"', last: true, indent: 2 },
+    { type: "json" as const, text: "  }" },
+    { type: "json" as const, text: "}" },
+  ];
+
   return (
     <pre class="px-6 pt-4 pb-6 font-mono text-sm leading-relaxed whitespace-pre overflow-x-auto no-scrollbar">
-      {dockerSnippetLines.map((line) => {
+      {dockerSnippetLines().map((line) => {
         if (line.type === "blank") return "\n";
         if (line.type === "comment")
           return <><span class="text-neutral-400 dark:text-[#6272a4]">{line.text}</span>{"\n"}</>;
@@ -53,6 +62,7 @@ function QuickStartContent() {
 export default function TabbedWindow() {
   const [activeTab, setActiveTab] = createSignal<number>(0);
   const [showDot, setShowDot] = createSignal(false);
+  const [country, setCountry] = createSignal<Country | null>(null);
 
   onMount(() => {
     if (!localStorage.getItem(TRIED_KEY)) {
@@ -83,7 +93,7 @@ export default function TabbedWindow() {
         </svg>
       </div>
 
-      <div class="flex gap-1 px-4 pt-3 border-b border-neutral-200 dark:border-white/5">
+      <div class="flex items-center gap-1 px-4 pt-3 border-b border-neutral-200 dark:border-white/5">
         {tabs.map((tab, i) => (
           <button
             onClick={() => selectTab(i)}
@@ -99,11 +109,18 @@ export default function TabbedWindow() {
             )}
           </button>
         ))}
+        <div class="ml-auto pr-1">
+          <CountryPicker selected={country()} onSelect={setCountry} />
+        </div>
       </div>
 
       <div class="min-h-[340px]">
-        {activeTab() === 0 && <QuickStartContent />}
-        {activeTab() === 1 && <Terminal />}
+        <div class={activeTab() === 0 ? "" : "hidden"}>
+          <QuickStartContent country={country()} />
+        </div>
+        <div class={activeTab() === 1 ? "" : "hidden"}>
+          <Terminal country={country()} />
+        </div>
       </div>
     </div>
   );
