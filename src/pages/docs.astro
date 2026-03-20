@@ -58,6 +58,10 @@ import { GITHUB_REPO } from "../constants.ts";
             <div class="rounded-lg overflow-hidden ring-1 ring-neutral-300 dark:ring-neutral-700">
               <div class="flex items-center gap-2 px-4 py-2 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700">
                 <span class="text-xs font-mono font-medium text-neutral-600 dark:text-neutral-400">Terminal</span>
+                <button data-copy="docker pull ghcr.io/cryling/gender-engine:latest && docker run -p 8080:8080 ghcr.io/cryling/gender-engine" class="copy-btn ml-auto p-1 rounded text-neutral-500 hover:text-neutral-300 hover:bg-neutral-700/50 transition-colors" aria-label="Copy commands">
+                  <svg class="w-4 h-4 copy-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" /></svg>
+                  <svg class="w-4 h-4 check-icon hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                </button>
               </div>
               <div class="bg-neutral-950 p-4 overflow-x-auto">
                 <pre class="text-sm font-mono leading-relaxed"><code><span class="text-neutral-500"># Pull the latest image</span>
@@ -133,6 +137,10 @@ import { GITHUB_REPO } from "../constants.ts";
               <div class="rounded-lg overflow-hidden ring-1 ring-neutral-300 dark:ring-neutral-700 mb-4">
                 <div class="flex items-center gap-2 px-4 py-2 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700">
                   <span class="text-xs font-mono font-medium text-neutral-600 dark:text-neutral-400">bash</span>
+                  <button data-copy='curl -X GET "https://gender.kianreiling.com/api/v1/gender?name=tom&country=US"' class="copy-btn ml-auto p-1 rounded text-neutral-500 hover:text-neutral-300 hover:bg-neutral-700/50 transition-colors" aria-label="Copy command">
+                    <svg class="w-4 h-4 copy-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" /></svg>
+                    <svg class="w-4 h-4 check-icon hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                  </button>
                 </div>
                 <div class="bg-neutral-950 p-4 overflow-x-auto">
                   <pre class="text-sm font-mono leading-relaxed"><code><span class="text-emerald-400">$</span> <span class="text-neutral-200">curl -X GET</span> <span class="text-amber-300">"https://gender.kianreiling.com/api/v1/gender?name=tom&country=US"</span></code></pre>
@@ -142,6 +150,10 @@ import { GITHUB_REPO } from "../constants.ts";
               <div class="rounded-lg overflow-hidden ring-1 ring-neutral-300 dark:ring-neutral-700">
                 <div class="flex items-center gap-2 px-4 py-2 bg-neutral-100 dark:bg-neutral-800 border-b border-neutral-300 dark:border-neutral-700">
                   <span class="text-xs font-mono font-medium text-neutral-600 dark:text-neutral-400">bash</span>
+                  <button data-copy='curl -X GET "http://localhost:8080/api/v1/gender?name=tom&country=US"' class="copy-btn ml-auto p-1 rounded text-neutral-500 hover:text-neutral-300 hover:bg-neutral-700/50 transition-colors" aria-label="Copy command">
+                    <svg class="w-4 h-4 copy-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" /></svg>
+                    <svg class="w-4 h-4 check-icon hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                  </button>
                 </div>
                 <div class="bg-neutral-950 p-4 overflow-x-auto">
                   <pre class="text-sm font-mono leading-relaxed"><code><span class="text-emerald-400">$</span> <span class="text-neutral-200">curl -X GET</span> <span class="text-amber-300">"http://localhost:8080/api/v1/gender?name=tom&country=US"</span></code></pre>
@@ -201,9 +213,12 @@ import { GITHUB_REPO } from "../constants.ts";
                       <td class="py-3 px-4 text-neutral-700 dark:text-neutral-300">The country code used for the lookup.</td>
                     </tr>
                     <tr class="border-t border-neutral-200 dark:border-neutral-700/50">
-                      <td class="py-3 px-4"><code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">result.Probability</code></td>
+                      <td class="py-3 px-4">
+                        <code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">result.Probability</code>
+                        <div class="mt-1"><span class="inline-flex items-center rounded-md bg-neutral-200 dark:bg-neutral-700 px-1.5 py-0.5 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">optional</span></div>
+                      </td>
                       <td class="py-3 px-4 text-neutral-700 dark:text-neutral-300">string</td>
-                      <td class="py-3 px-4 text-neutral-700 dark:text-neutral-300">Confidence score between 0 and 1.</td>
+                      <td class="py-3 px-4 text-neutral-700 dark:text-neutral-300">Confidence score between 0 and 1. Only returned when sufficient data is available for the given name/country combination.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -244,4 +259,51 @@ import { GITHUB_REPO } from "../constants.ts";
       </div>
     </footer>
   </div>
+
+  <style>
+    @keyframes icon-pop-in {
+      0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+      60% { transform: scale(1.15) rotate(0deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes icon-fade-back {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .copy-btn .check-icon.anim-in { animation: icon-pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .copy-btn .copy-icon.anim-in { animation: icon-fade-back 0.25s ease-out forwards; }
+  </style>
+
+  <script>
+    document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+      let timer: number | undefined;
+      btn.addEventListener("click", async () => {
+        const text = btn.dataset.copy;
+        if (!text) return;
+        await navigator.clipboard.writeText(text);
+
+        clearTimeout(timer);
+        const copyIcon = btn.querySelector(".copy-icon") as HTMLElement;
+        const checkIcon = btn.querySelector(".check-icon") as HTMLElement;
+
+        // Show green check with pop
+        copyIcon.classList.add("hidden");
+        copyIcon.classList.remove("anim-in");
+        checkIcon.classList.remove("hidden", "anim-in");
+        checkIcon.style.color = "#34d399";
+        void checkIcon.offsetWidth;
+        checkIcon.classList.add("anim-in");
+
+        // After a beat, fade the clipboard icon back in
+        timer = setTimeout(() => {
+          checkIcon.classList.add("hidden");
+          checkIcon.classList.remove("anim-in");
+          checkIcon.style.color = "";
+          copyIcon.classList.remove("hidden");
+          void copyIcon.offsetWidth;
+          copyIcon.classList.add("anim-in");
+        }, 1500);
+      });
+    });
+  </script>
 </Layout>

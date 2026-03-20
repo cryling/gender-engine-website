@@ -5,6 +5,6 @@ Website for Gender Engine. Built with [Astro](https://astro.build) and deployed 
 ## Development
 
 ```sh
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
