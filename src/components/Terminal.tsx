@@ -1,4 +1,5 @@
 import { createSignal, For, onMount } from "solid-js";
+import type { Country } from "./CountryPicker";
 import "../styles/global.css";
 
 interface TerminalLine {
@@ -8,14 +9,19 @@ interface TerminalLine {
 
 const API_BASE = "https://gender.kianreiling.com";
 
-async function fetchGenderResult(name: string): Promise<string> {
-  const url = `/api/v1/gender?name=${encodeURIComponent(name.toLowerCase().trim())}`;
-  const res = await fetch(url);
+async function fetchGenderResult(name: string, country: Country | null): Promise<string> {
+  const params = new URLSearchParams({ name: name.toLowerCase().trim() });
+  if (country) params.set("country", country.code);
+  const res = await fetch(`/api/v1/gender?${params}`);
   const data = await res.json();
   return JSON.stringify(data, null, 2);
 }
 
-export default function Terminal() {
+interface TerminalProps {
+  country: Country | null;
+}
+
+export default function Terminal(props: TerminalProps) {
   let currentInputRef: HTMLSpanElement | undefined;
   let carretDivRef: HTMLDivElement | undefined;
   let containerRef: HTMLDivElement | undefined;
@@ -103,15 +109,16 @@ export default function Terminal() {
     }
 
     const name = rawInput.split(/\s+/)[0]; // Take first word as the name
+    const countryParam = props.country ? `&country=${props.country.code}` : "";
     newLines.push({
       type: "output",
-      text: `> curl -X GET "${API_BASE}/api/v1/gender?name=${name.toLowerCase()}"`,
+      text: `> curl -X GET "${API_BASE}/api/v1/gender?name=${name.toLowerCase()}${countryParam}"`,
     });
     setLines([...newLines]);
     setTimeout(scrollToBottom, 0);
 
     try {
-      const json = await fetchGenderResult(name);
+      const json = await fetchGenderResult(name, props.country);
       newLines.push(
         { type: "json", text: json },
         { type: "info", text: "" }
