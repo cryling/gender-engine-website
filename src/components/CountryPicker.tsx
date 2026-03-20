@@ -213,9 +213,12 @@ interface CountryPickerProps {
 export default function CountryPicker(props: CountryPickerProps) {
   const [open, setOpen] = createSignal(false);
   const [search, setSearch] = createSignal("");
+  const [highlightIndex, setHighlightIndex] = createSignal(0);
   let rootRef: HTMLDivElement | undefined;
   let inputRef: HTMLInputElement | undefined;
+  let listRef: HTMLDivElement | undefined;
 
+  // Index 0 = Global, 1+ = filtered countries
   const filtered = createMemo(() => {
     const q = search().toLowerCase();
     if (!q) return COUNTRIES;
@@ -225,6 +228,39 @@ export default function CountryPicker(props: CountryPickerProps) {
         c.code.toLowerCase().includes(q)
     );
   });
+
+  const totalItems = () => filtered().length + 1; // +1 for Global
+
+  const scrollHighlightIntoView = (index: number) => {
+    if (!listRef) return;
+    const item = listRef.children[index] as HTMLElement | undefined;
+    item?.scrollIntoView({ block: "nearest" });
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = Math.min(highlightIndex() + 1, totalItems() - 1);
+      setHighlightIndex(next);
+      scrollHighlightIntoView(next);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const next = Math.max(highlightIndex() - 1, 0);
+      setHighlightIndex(next);
+      scrollHighlightIntoView(next);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const idx = highlightIndex();
+      if (idx === 0) {
+        select(null);
+      } else {
+        const country = filtered()[idx - 1];
+        if (country) select(country);
+      }
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
+  };
 
   const handleClickOutside = (e: MouseEvent) => {
     if (rootRef && !rootRef.contains(e.target as Node)) {
@@ -242,6 +278,7 @@ export default function CountryPicker(props: CountryPickerProps) {
     setOpen(next);
     if (next) {
       setSearch("");
+      setHighlightIndex(0);
       setTimeout(() => inputRef?.focus(), 0);
     }
   };
@@ -281,15 +318,17 @@ export default function CountryPicker(props: CountryPickerProps) {
               type="text"
               placeholder="Search countries..."
               value={search()}
-              onInput={(e) => setSearch(e.currentTarget.value)}
+              onInput={(e) => { setSearch(e.currentTarget.value); setHighlightIndex(0); }}
+              onKeyDown={handleKeyDown}
               class="w-full px-3 py-1.5 text-sm rounded-lg bg-neutral-50 border border-neutral-200 text-neutral-900 placeholder-neutral-400 outline-none focus:border-neutral-300 dark:bg-neutral-900 dark:border-neutral-600 dark:text-white dark:placeholder-neutral-500 dark:focus:border-neutral-500"
             />
           </div>
-          <div class="max-h-56 overflow-y-auto overscroll-contain">
+          <div ref={(el) => (listRef = el)} class="max-h-56 overflow-y-auto overscroll-contain">
             <button
               onClick={() => select(null)}
-              class={`w-full flex items-center gap-3 px-3 py-2 text-sm text-left transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-700/50 ${
-                !props.selected ? "bg-neutral-50 dark:bg-neutral-700/50" : ""
+              onMouseEnter={() => setHighlightIndex(0)}
+              class={`w-full flex items-center gap-3 px-3 py-2 text-sm text-left transition-colors ${
+                highlightIndex() === 0 ? "bg-neutral-100 dark:bg-neutral-700" : "hover:bg-neutral-50 dark:hover:bg-neutral-700/50"
               }`}
             >
               <span class="text-base leading-none">{"\u{1F30D}"}</span>
@@ -297,11 +336,12 @@ export default function CountryPicker(props: CountryPickerProps) {
               <span class="ml-auto text-xs text-neutral-400">All</span>
             </button>
             <For each={filtered()}>
-              {(country) => (
+              {(country, i) => (
                 <button
                   onClick={() => select(country)}
-                  class={`w-full flex items-center gap-3 px-3 py-2 text-sm text-left transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-700/50 ${
-                    props.selected?.code === country.code ? "bg-neutral-50 dark:bg-neutral-700/50" : ""
+                  onMouseEnter={() => setHighlightIndex(i() + 1)}
+                  class={`w-full flex items-center gap-3 px-3 py-2 text-sm text-left transition-colors ${
+                    highlightIndex() === i() + 1 ? "bg-neutral-100 dark:bg-neutral-700" : "hover:bg-neutral-50 dark:hover:bg-neutral-700/50"
                   }`}
                 >
                   <span class="text-base leading-none">{country.emoji}</span>

@@ -86,8 +86,16 @@ export default function TabbedWindow() {
     }
   };
 
+  const handleWindowClick = (e: MouseEvent) => {
+    if (activeTab() !== 1) return;
+    // Don't steal focus from buttons, inputs, or the country picker
+    const target = e.target as HTMLElement;
+    if (target.closest("button") || target.closest("input")) return;
+    terminalApi?.focus();
+  };
+
   return (
-    <div>
+    <div onClick={handleWindowClick} class="cursor-text">
       <div class="pl-4 pt-4">
         <svg
           aria-hidden="true"
