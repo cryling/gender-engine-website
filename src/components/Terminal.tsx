@@ -276,7 +276,7 @@ export default function Terminal(props: TerminalProps) {
                 </span>
                 <div
                   ref={(el) => (carretDivRef = el)}
-                  class="hidden group-has-focus/input:block bg-neutral-800 dark:bg-white w-2.5 h-5.25 shrink-0 animate-blink"
+                  class="hidden group-has-focus/input:block bg-white w-2.5 h-5.25 shrink-0 animate-blink mix-blend-difference"
                 />
                 <span class="text-transparent" />
               </div>
