@@ -15,12 +15,21 @@ const WELCOME_LINES: TerminalLine[] = [
   { type: "info", text: "" },
 ];
 
+const resultCache = new Map<string, string>();
+
 async function fetchGenderResult(name: string, country: Country | null): Promise<string> {
   const params = new URLSearchParams({ name: name.toLowerCase().trim() });
   if (country) params.set("country", country.code);
+  const key = params.toString();
+
+  const cached = resultCache.get(key);
+  if (cached) return cached;
+
   const res = await fetch(`${API_BASE}/api/v1/gender?${params}`);
   const data = await res.json();
-  return JSON.stringify(data, null, 2);
+  const json = JSON.stringify(data, null, 2);
+  resultCache.set(key, json);
+  return json;
 }
 
 function encodeSpaces(text: string): string {
