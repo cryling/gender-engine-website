@@ -6,8 +6,6 @@ import type { Country } from "./CountryPicker";
 const tabs = ["Quick Start", "Try it"] as const;
 const TRIED_KEY = "tried-terminal";
 
-const API_BASE = "https://gender.kianreiling.com";
-
 function buildCurlExample(country: Country | null) {
   const countryParam = country ? `&country=${country.code}` : "&country=US";
   return `$ curl -X GET "http://localhost:8080/api/v1/gender?name=tom${countryParam}"`;
@@ -15,7 +13,6 @@ function buildCurlExample(country: Country | null) {
 
 function QuickStartContent(props: { country: Country | null }) {
   const countryCode = () => props.country?.code ?? "US";
-  const countryParam = () => props.country ? `&country=${props.country.code}` : "&country=US";
 
   const dockerSnippetLines = () => [
     { type: "comment" as const, text: "# Download the image" },
@@ -116,7 +113,7 @@ export default function TabbedWindow() {
         </div>
       </div>
 
-      <div class="min-h-[340px]">
+      <div class="min-h-85">
         <div class={activeTab() === 0 ? "" : "hidden"}>
           <QuickStartContent country={country()} />
         </div>

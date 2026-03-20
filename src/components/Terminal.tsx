@@ -203,7 +203,7 @@ export default function Terminal(props: TerminalProps) {
     <div
       ref={(el) => (containerRef = el)}
       onClick={() => currentInputRef?.focus()}
-      class="max-h-[340px] overflow-y-auto no-scrollbar py-4 cursor-text"
+      class="max-h-85 overflow-y-auto no-scrollbar py-4 cursor-text"
     >
       <For each={lines()}>
         {(line) => {
@@ -243,7 +243,7 @@ export default function Terminal(props: TerminalProps) {
       {!isProcessing() && (
         <div class="group flex items-center font-mono text-sm px-6">
           <span class="text-emerald-600 dark:text-[#bd93f9]">$&nbsp;</span>
-          <div class="relative group/input flex items-center overflow-x-scroll no-scrollbar caret-transparent pr-[10px]">
+          <div class="relative group/input flex items-center overflow-x-scroll no-scrollbar caret-transparent pr-2.5">
             <span
               ref={(el) => (currentInputRef = el)}
               contentEditable={true}
@@ -276,7 +276,7 @@ export default function Terminal(props: TerminalProps) {
                 </span>
                 <div
                   ref={(el) => (carretDivRef = el)}
-                  class="hidden group-has-[:focus]/input:block bg-neutral-800 dark:bg-white w-[10px] h-[21px] shrink-0 animate-blink"
+                  class="hidden group-has-focus/input:block bg-neutral-800 dark:bg-white w-2.5 h-5.25 shrink-0 animate-blink"
                 />
                 <span class="text-transparent" />
               </div>
