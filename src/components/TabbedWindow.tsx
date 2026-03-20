@@ -1,7 +1,7 @@
 import { createSignal, onMount } from "solid-js";
 import Terminal from "./Terminal";
 import CountryPicker from "./CountryPicker";
-import type { Country } from "./CountryPicker";
+import type { Country } from "../data/countries";
 
 const tabs = ["Quick Start", "Try it"] as const;
 const TRIED_KEY = "tried-terminal";
@@ -95,7 +95,7 @@ export default function TabbedWindow() {
   };
 
   return (
-    <div onClick={handleWindowClick} class="cursor-text">
+    <div onClick={handleWindowClick} class={activeTab() === 1 ? "cursor-text" : ""}>
       <div class="pl-4 pt-4">
         <svg
           aria-hidden="true"
