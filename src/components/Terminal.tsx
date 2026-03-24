@@ -208,7 +208,7 @@ export default function Terminal(props: TerminalProps) {
     <div
       ref={(el) => (containerRef = el)}
       onClick={() => inputRef?.focus()}
-      class="max-h-85 overflow-y-auto no-scrollbar py-4 cursor-text"
+      class="overflow-y-auto no-scrollbar py-4 cursor-text"
     >
       <For each={lines()}>
         {(line) => {

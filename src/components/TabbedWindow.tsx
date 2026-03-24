@@ -130,11 +130,11 @@ export default function TabbedWindow() {
         </div>
       </div>
 
-      <div class="min-h-85">
-        <div class={activeTab() === 0 ? "" : "hidden"}>
+      <div class="grid [&>*]:col-start-1 [&>*]:row-start-1">
+        <div class={activeTab() === 0 ? "" : "invisible"}>
           <QuickStartContent country={country()} />
         </div>
-        <div class={activeTab() === 1 ? "" : "hidden"}>
+        <div class={activeTab() === 1 ? "" : "invisible"}>
           <Terminal country={country()} onReady={(api) => (terminalApi = api)} />
         </div>
       </div>
