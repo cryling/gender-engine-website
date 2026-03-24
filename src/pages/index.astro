@@ -33,7 +33,7 @@ import { GITHUB_REPO } from "../constants.ts";
                   height={530}
                   width={530}
                   style="color:transparent"
-                  class="absolute -right-64 -top-64"
+                  class="absolute -right-64 -top-64 pointer-events-none select-none"
                 />
                 <Image
                   src={indigoBlur}
@@ -41,15 +41,15 @@ import { GITHUB_REPO } from "../constants.ts";
                   height={567}
                   width={567}
                   style="color:transparent"
-                  class="absolute -bottom-40 -right-44"
+                  class="absolute -bottom-40 -right-44 pointer-events-none select-none"
                 />
 
                 <div
-                  class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-emerald-300 via-emerald-300/70 to-green-300 opacity-10 blur-lg"
+                  class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-emerald-300 via-emerald-300/70 to-green-300 opacity-10 blur-lg pointer-events-none select-none"
                 >
                 </div>
                 <div
-                  class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-emerald-300 via-emerald-300/70 to-green-300 opacity-10"
+                  class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-emerald-300 via-emerald-300/70 to-green-300 opacity-10 pointer-events-none select-none"
                 >
                 </div>
                 <div class="animated-border relative rounded-2xl p-px">
@@ -80,7 +80,7 @@ import { GITHUB_REPO } from "../constants.ts";
         <div class="mt-8 border-t border-neutral-200 dark:border-neutral-700/40 pt-6">
           <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-400">
             <p>This project does not collect, store, or process any personal data. All API requests are stateless and not logged.</p>
-            <p class="shrink-0">Data: <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/MSEGSJ" class="hover:text-neutral-700 dark:hover:text-neutral-300 underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">WGND 2.0</a></p>
+            <p class="shrink-0">Data: <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/MSEGSJ" class="hover:text-neutral-700 dark:hover:text-neutral-300 underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">WGND 2.0</a> &middot; Made by <a href="https://me.kianreiling.com" class="hover:text-neutral-700 dark:hover:text-neutral-300 underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">Kian</a></p>
           </div>
         </div>
       </div>
