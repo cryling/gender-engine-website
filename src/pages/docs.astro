@@ -299,7 +299,7 @@ import { GITHUB_REPO } from "../constants.ts";
         checkIcon.classList.add("anim-in");
 
         // After a beat, fade the clipboard icon back in
-        timer = setTimeout(() => {
+        timer = window.setTimeout(() => {
           checkIcon.classList.add("hidden");
           checkIcon.classList.remove("anim-in");
           checkIcon.style.color = "";
