@@ -130,7 +130,7 @@ export default function TabbedWindow() {
         </div>
       </div>
 
-      <div class="grid [&>*]:col-start-1 [&>*]:row-start-1">
+      <div class="grid [&>*]:col-start-1 [&>*]:row-start-1 h-96 overflow-y-auto">
         <div class={activeTab() === 0 ? "" : "invisible"}>
           <QuickStartContent country={country()} />
         </div>
