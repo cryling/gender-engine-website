@@ -19,7 +19,7 @@ function QuickStartContent(props: { country: Country | null }) {
     if (country) {
       resultFields.push(
         { type: "json-key", key: "Country", value: `"${country.code}"`, last: false, indent: 2 },
-        { type: "json-key", key: "Probability", value: '"0.99560356"', last: true, indent: 2 },
+        { type: "json-key", key: "ObservedShare", value: '"0.99560356"', last: true, indent: 2 },
       );
     }
 

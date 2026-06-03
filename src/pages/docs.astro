@@ -175,7 +175,7 @@ import { GITHUB_REPO } from "../constants.ts";
     <span class="text-emerald-300">"Name"</span>: <span class="text-amber-300">"tom"</span>,
     <span class="text-emerald-300">"Gender"</span>: <span class="text-amber-300">"M"</span>,
     <span class="text-emerald-300">"Country"</span>: <span class="text-amber-300">"US"</span>,
-    <span class="text-emerald-300">"Probability"</span>: <span class="text-amber-300">"0.99560356"</span>
+    <span class="text-emerald-300">"ObservedShare"</span>: <span class="text-amber-300">"0.99560356"</span>
   {`}`}
 {`}`}</code></pre>
                 </div>
@@ -214,11 +214,11 @@ import { GITHUB_REPO } from "../constants.ts";
                     </tr>
                     <tr class="border-t border-neutral-200 dark:border-neutral-700/50">
                       <td class="py-3 px-4">
-                        <code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">result.Probability</code>
+                        <code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">result.ObservedShare</code>
                         <div class="mt-1"><span class="inline-flex items-center rounded-md bg-neutral-200 dark:bg-neutral-700 px-1.5 py-0.5 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">optional</span></div>
                       </td>
                       <td class="py-3 px-4 text-neutral-700 dark:text-neutral-300">string</td>
-                      <td class="py-3 px-4 text-neutral-700 dark:text-neutral-300">Confidence score between 0 and 1. Only returned when sufficient data is available for the given name/country combination.</td>
+                      <td class="py-3 px-4 text-neutral-700 dark:text-neutral-300">The share of records (between 0 and 1) in the source dataset where this name was observed with the returned gender. This is an observed frequency, <strong class="font-semibold text-neutral-900 dark:text-neutral-200">not a predicted probability</strong>. Only returned when sufficient data is available for the given name/country combination.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -242,11 +242,19 @@ import { GITHUB_REPO } from "../constants.ts";
               </li>
               <li class="flex gap-3">
                 <span class="text-emerald-500 shrink-0 mt-0.5 font-bold">&bull;</span>
+                <span>If a name is missing from the dataset or cannot be resolved to a single gender, the <code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">message</code> reads <code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">"&lt;name&gt; could not be found or is not clearly assignable to a single gender"</code> and no <code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">result</code> is returned.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-emerald-500 shrink-0 mt-0.5 font-bold">&bull;</span>
                 <span>Supported country codes follow the <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" class="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 underline underline-offset-2" target="_blank" rel="noopener noreferrer">ISO 3166-1 alpha-2</a> standard.</span>
               </li>
               <li class="flex gap-3">
                 <span class="text-emerald-500 shrink-0 mt-0.5 font-bold">&bull;</span>
                 <span>Gender data is sourced from the <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/MSEGSJ" class="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 underline underline-offset-2" target="_blank" rel="noopener noreferrer">World Gender Name Dictionary (WGND 2.0)</a>, published via the Harvard Dataverse.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-emerald-500 shrink-0 mt-0.5 font-bold">&bull;</span>
+                <span>The dataset only records how often a name was observed with a given gender, so <code class="rounded bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 text-xs font-mono font-medium text-neutral-900 dark:text-neutral-200">ObservedShare</code> is an observed frequency rather than a probability or model confidence.</span>
               </li>
             </ul>
           </section>
